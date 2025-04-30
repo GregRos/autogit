@@ -1,4 +1,3 @@
-import { VaultChecker } from "./vault-checker.js"
+import { Historian } from "./historian/historian.js"
 
-const vc = new VaultChecker("gregros.dev.vault")
-await vc.backupHistory({ type: "explicit" })
+

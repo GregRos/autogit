@@ -60,6 +60,7 @@
   "packageManager": "yarn@4.9.1",
   "devDependencies": {
     "@gregros/eslint-config": "^0.7.1",
+    "@types/js-yaml": "^4",
     "@types/lodash": "^4.17.16",
     "@types/node": "^22.15.2",
     "@types/shelljs": "^0",
@@ -83,11 +84,21 @@
     "yamprint": "^0.8.4"
   },
   "dependencies": {
+    "chokidar": "^4.0.3",
+    "cosmiconfig": "^9.0.0",
     "dayjs": "^1.11.13",
     "doddle": "^5.0.0-beta.16",
+    "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
+    "parse-duration": "^2.1.4",
     "pretty-ms": "^9.2.0",
     "roarr": "^7.21.1",
-    "simple-git": "^3.27.0"
+    "rxjs": "^7.8.2",
+    "simple-git": "^3.27.0",
+    "what-are-you": "^0.1.8",
+    "yaml": "^2.7.1",
+    "yargs": "^17.7.2",
+    "zod": "^3.24.3",
+    "zod-config": "^0.1.3"
   }
 }
