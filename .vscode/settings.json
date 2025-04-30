@@ -15,7 +15,7 @@
     "**/.idea": true,
     "**/.mypy_cache": true,
     "**/__pycache__": true,
-    "**/dist": true,
+    "dist": true,
     "**/dist_aux": true,
     "**/*.log": true,
     "coverage": true,

@@ -1,5 +1,12 @@
 {
-  "name": "autogit-historian",
+  "name": "@gregros/autogit",
+  "version": "0.1.0",
+  "description": "Commits automatically to save progress.",
+  "homepage": "https://github.com/GregRos/autogit#readme",
+  "repository": "github:GregRos/autogit",
+  "license": "MIT",
+  "author": "GregRos",
+  "sideEffects": false,
   "exports": {
     ".": {
       "require": {
@@ -9,23 +16,12 @@
       "import": {
         "types": "./dist/esm/index.d.ts",
         "default": "./dist/esm/index.js"
-      },
-      "node": {
-        "types": "./dist/cjs/index.d.ts",
-        "default": "./dist/cjs/index.js"
       }
     }
   },
-  "sourcesRoot": "src",
-  "types": "dist/cjs/index.d.ts",
-  "description": "Tracks history",
-  "homepage": "https://github.com/GregRos/autogit-historian#readme",
-  "version": "0.1.0",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "type": "module",
-  "sideEffects": false,
-  "repository": "github:GregRos/autogit-historian",
+  "module": "./publish/autogit.mjs",
+  "types": "./dist/esm/main.d.ts",
+  "bin": "./publish/autogit.js",
   "files": [
     "dist",
     "src",
@@ -35,8 +31,9 @@
   ],
   "scripts": {
     "build": "tsc -b .",
+    "bundle": "node tools/build.js",
     "clean": "shx rm -rf dist .tsbuildinfo || true",
-    "rebuild": "run-s clean build",
+    "build:clean": "run-s clean build",
     "prepare": "husky install",
     "watch": "tsc -b . --watch",
     "prettier:fix": "prettier --write 'src/**/*.{js,jsx,cjs,mjs,ts,tsx,cts,mts,ctsx,mtsx,html,htm,yaml,yml,json,scss,css}'",
@@ -48,25 +45,38 @@
     "prepublishOnly": "node tools/packaging.cjs",
     "tidy": "yarn install && run-s lint:fix build:clean test prepublishOnly"
   },
-  "keywords": [
-    "a"
-  ],
-  "author": "GregRos",
-  "license": "MIT",
   "lint-staged": {
     "*.{ts,mts,cts,js,mjs,cjs}": "node_modules/.bin/eslint --cache --fix",
     "'src/**/*.{js,jsx,cjs,mjs,ts,tsx,cts,mts,ctsx,mtsx,html,htm,yaml,yml,json,scss,css}'": "node_modules/.bin/prettier --write"
   },
-  "packageManager": "yarn@4.9.1",
+  "resolutions": {
+    "what-are-you": "portal:/C:/codegr/what-are-you"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.17.16",
+    "cosmiconfig": "^9.0.0",
+    "dayjs": "^1.11.13",
+    "doddle": "^5.0.0-beta.16",
+    "js-yaml": "^4.1.0",
+    "lodash": "^4.17.21",
+    "parse-duration": "^2.1.4",
+    "pretty-ms": "^9.2.0",
+    "roarr": "^7.21.1",
+    "rxjs": "^7.8.2",
+    "simple-git": "^3.27.0",
+    "what-are-you": "^0.1.8",
+    "yargs": "^17.7.2",
+    "zod": "^3.24.3"
+  },
   "devDependencies": {
     "@gregros/eslint-config": "^0.7.1",
     "@types/js-yaml": "^4",
-    "@types/lodash": "^4.17.16",
     "@types/node": "^22.15.2",
     "@types/shelljs": "^0",
     "@typescript-eslint/eslint-plugin": "^8.31.0",
     "@typescript-eslint/parser": "^8.31.0",
     "declare-it": "^3.0.8",
+    "esbuild": "^0.25.3",
     "eslint": "^8",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.1",
@@ -83,22 +93,6 @@
     "typescript": "^5.8.3",
     "yamprint": "^0.8.4"
   },
-  "dependencies": {
-    "chokidar": "^4.0.3",
-    "cosmiconfig": "^9.0.0",
-    "dayjs": "^1.11.13",
-    "doddle": "^5.0.0-beta.16",
-    "js-yaml": "^4.1.0",
-    "lodash": "^4.17.21",
-    "parse-duration": "^2.1.4",
-    "pretty-ms": "^9.2.0",
-    "roarr": "^7.21.1",
-    "rxjs": "^7.8.2",
-    "simple-git": "^3.27.0",
-    "what-are-you": "^0.1.8",
-    "yaml": "^2.7.1",
-    "yargs": "^17.7.2",
-    "zod": "^3.24.3",
-    "zod-config": "^0.1.3"
-  }
+  "packageManager": "yarn@4.9.1",
+  "sourcesRoot": "src"
 }

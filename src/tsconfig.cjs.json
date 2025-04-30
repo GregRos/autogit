@@ -1,9 +1,9 @@
 {
-  "extends": "../tsconfig.base.esm.json",
+  "extends": "../tsconfig.base.cjs.json",
   "compilerOptions": {
     "composite": true,
-    "tsBuildInfoFile": "../.tsbuildinfo/esm.tsbuildinfo",
-    "outDir": "../dist/esm",
+    "tsBuildInfoFile": "../.buildinfo/cjs.tsbuildinfo",
+    "outDir": "../dist/cjs",
     "rootDir": ".",
     "noEmit": false
   },

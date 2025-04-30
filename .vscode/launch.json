@@ -4,22 +4,10 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Test",
-      "runtimeExecutable": "yarn",
+      "name": "Launch Main (dist)",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "skipFiles": ["<node_internals>/**"],
-      "args": ["test", "--watchAll=false", "--passWithNoTests"]
-    },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "Launch Index",
-      "runtimeExecutable": "tsx",
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/src/index.ts"
+      "program": "${workspaceFolder}/dist/cjs/main.js"
     }
   ]
 }

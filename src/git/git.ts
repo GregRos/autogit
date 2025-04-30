@@ -1,53 +1,96 @@
 import dayjs from "dayjs"
+import { doddle } from "doddle"
 import { SimpleGit, simpleGit } from "simple-git"
+import { FilesDiff } from "../historian/diff/files-diff.js"
+import { LinesDiff } from "../historian/diff/lines-diff.js"
+import { DiffSummary } from "../historian/diff/summary.js"
 import { Roarr } from "../logging/setup.js"
 
 const logger = Roarr.child({
     part: "git"
 })
 export class Git {
-    private _simpleGit: SimpleGit
+    private _git: SimpleGit
     constructor(
         readonly executable: string,
-        readonly cwd: string
+        readonly cwd: string,
+        readonly dryRun = false
     ) {
-        this._simpleGit = simpleGit({
+        this._git = simpleGit({
             baseDir: cwd,
             binary: executable
         })
     }
 
-    get isRepo() {
-        return this._simpleGit.checkIsRepo()
+    async currentDiff() {
+        const linesInfo = LinesDiff.fromDiffResult(await this._git.diffSummary(["--staged"]))
+        const statusInfo = FilesDiff.fromStatusResult(await this._git.status())
+        const totalDiff = new DiffSummary(statusInfo, linesInfo)
+        return totalDiff
     }
 
-    async hasCommits() {
-        const commits = await this._simpleGit.log()
-        return commits.total > 0
-    }
+    private _state = doddle(async () => {
+        if (!(await this._git.checkIsRepo())) {
+            return "not-repo"
+        }
+        if (!(await this.#firstCommit.pull())) {
+            return "empty-repo"
+        }
+        return "okay"
+    })
 
     async init() {
-        if (!(await this.isRepo)) {
+        const state = await this._state.pull()
+        if (state === "not-repo") {
             logger.debug("Initializing git repository...")
-            await this._simpleGit.init()
+            !this.dryRun && (await this._git.init())
         }
-        const commits = await this._getLog()
-        if (commits.total === 0) {
+        if (state !== "okay") {
             logger.debug("No commits found, creating initial commit...")
-            await this._simpleGit.commit("Initial commit (autogit).")
+            !this.dryRun && (await this._git.commit("Initial commit (autogit)."))
         }
     }
 
-    private _getLog() {
-        return this._simpleGit.log({
-            "--reverse": null,
-            "--max-parents": "0"
+    async commit(descriptive: string[]) {
+        const state = await this._state.pull()
+        if (state === "not-repo") {
+            Roarr.error("Not a git repository. Run `autogit init` first.")
+            return
+        }
+        if (state === "empty-repo") {
+            Roarr.error("No initial commit found. Run `autogit init` first.")
+            return
+        }
+        const { default: prettyMs } = await import("pretty-ms")
+        const dtString = prettyMs(dayjs().diff(await this.#initialDate.pull()), {
+            secondsDecimalDigits: 0
         })
-    }
+        Roarr.debug("STAGING all changes...")
+        !this.dryRun && (await this._git.add("."))
 
-    async getInitialDate() {
-        log = await this._getLog()
+        const totalDiff = await this.currentDiff()
+        if (totalDiff.isEmpty) {
+            Roarr.warn("NO CHANGES to commit")
+            return
+        }
+        const message = [...descriptive, dtString, ...totalDiff.toParts()].join(" ┃ ")
+        Roarr.info(`COMMITTING « ${message} »`)
 
-        return dayjs(log.all[0].date)
+        !this.dryRun && (await this._git.commit(message))
+        Roarr.info("All changes commited!")
     }
+    #firstCommit = doddle(() => {
+        return this._git.log({
+            "--reverse": null,
+            "--max-count": 1
+        })
+    }).map(x => x.all[0])
+
+    #initialDate = doddle(async () => {
+        const initialCommit = await this.#firstCommit.pull()
+        if (!initialCommit) {
+            return undefined
+        }
+        return dayjs(initialCommit.date)
+    })
 }

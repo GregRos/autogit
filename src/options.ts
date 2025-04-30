@@ -1,33 +1,35 @@
 import { cosmiconfigSync } from "cosmiconfig"
-import parseDuration from "parse-duration"
-import { isNullish } from "what-are-you"
+import { assign } from "lodash"
 import { z } from "zod"
+import { LabeledTime } from "./utils/labeled-time.js"
 
 export const Duration = z
     .string()
     .or(z.number())
     .transform(x => {
-        x = typeof x === "number" ? `${x}m` : x
-        const parsed = parseDuration(x)
-        if (isNullish(parsed)) {
-            throw new Error(`Invalid duration: ${x}`)
-        }
-        return parsed
+        return new LabeledTime(x)
     })
 
 export type Duration = z.infer<typeof Duration>
 
 export const AutogitOptions = z.object({
     cwd: z.string().optional().default("."),
-    git: z.string().optional().default("git"),
-    interval: Duration,
-    firstDelay: Duration.or(z.literal(false)).default("0m")
+    every: Duration,
+    immediately: z.boolean().optional().default(true)
 })
 
 export type AutogitOptions = z.infer<typeof AutogitOptions>
 
-export function getOptions() {
-    const optionsFile = cosmiconfigSync("autogit")
-    const x = optionsFile.load(process.cwd())
-    return AutogitOptions.parse(x?.config)
+export function loadConfig(overrides: Partial<AutogitOptions> = {}): AutogitOptions {
+    const optionsFile = cosmiconfigSync("autogit").load(process.cwd())
+    const cfg = assign(optionsFile?.config ?? {}, overrides)
+    return AutogitOptions.parse(cfg)
 }
+
+export const defaultOptions: z.input<typeof AutogitOptions> = {
+    cwd: ".",
+    every: "5m",
+    immediately: true
+}
+
+AutogitOptions.parse(defaultOptions) // Make sure the default options are valid

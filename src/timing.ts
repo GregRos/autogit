@@ -3,7 +3,7 @@ import { Roarr } from "./logging/setup.js"
 import { LabeledTime } from "./utils/labeled-time.js"
 export interface TimingOptions {
     interval: LabeledTime
-    firstDelay: LabeledTime | false
+    immediately: boolean
 }
 
 const logger = Roarr.child({
@@ -15,9 +15,9 @@ function _getIntervalString(index: number, interval: LabeledTime) {
     return [`🤖⏰ ${nick}`, interval.text].join(" ")
 }
 export function createTimer(options: TimingOptions) {
-    const { interval, firstDelay } = options
+    const { interval, immediately } = options
     logger.debug("Starting AutoGit interval timer with interval=%d, firstDelay=%d")
-    return timer(firstDelay === false ? interval.ms : firstDelay.ms, interval.ms).pipe(
+    return timer(immediately ? new LabeledTime("5s").ms : interval.ms, interval.ms).pipe(
         map(n => {
             return _getIntervalString(n, interval)
         })
