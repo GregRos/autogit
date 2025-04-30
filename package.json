@@ -7,6 +7,7 @@
   "license": "MIT",
   "author": "GregRos",
   "sideEffects": false,
+  "type": "module",
   "exports": {
     ".": {
       "require": {
@@ -31,8 +32,8 @@
   ],
   "scripts": {
     "build": "tsc -b .",
-    "bundle": "node tools/build.js",
-    "clean": "shx rm -rf dist .tsbuildinfo || true",
+    "bundle": "node tools/build.cjs",
+    "clean": "shx rm -rf dist .buildinfo || true",
     "build:clean": "run-s clean build",
     "prepare": "husky install",
     "watch": "tsc -b . --watch",

@@ -1,7 +1,9 @@
 /* prettier-ignore */
-process.env.ROARR_LOG = "true"
-
-import { Roarr, ROARR } from "roarr"
 import { override } from "./logging.js"
-override(ROARR)
-export { Roarr }
+async function getRoarr() {
+    process.env.ROARR_LOG = "true"
+    const { Roarr, ROARR } = await import("roarr")
+    override(ROARR)
+    return Roarr
+}
+export const Roarr = await getRoarr()
