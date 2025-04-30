@@ -1,36 +1,21 @@
 import dayjs, { type Dayjs } from "dayjs"
 import { default as prettyMs } from "pretty-ms"
-import { SimpleGit, simpleGit } from "simple-git"
+import { SimpleGit } from "simple-git"
+import { Git } from "../git/git.js"
 import { Roarr } from "../logging/setup.js"
 import { FilesDiff } from "./diff/files-diff.js"
 import { LinesDiff } from "./diff/lines-diff.js"
 import { DiffSummary } from "./diff/summary.js"
 
 export interface HistorianOptions {
-    executable: string
-    cwd: string
+    simpleGit: SimpleGit
 }
 const logger = Roarr.child({
     part: "historian"
 })
 
 export class Historian {
-    private git: SimpleGit
-
-    constructor(private _options: HistorianOptions) {
-        logger.debug(
-            {
-                executable: _options.executable,
-                cwd: _options.cwd,
-                timeZero: _options.timeZero.toISOString()
-            },
-            "Created Historian instance with options"
-        )
-        this.git = simpleGit({
-            baseDir: _options.cwd,
-            binary: _options.executable
-        })
-    }
+    constructor(private readonly _git: Git) {}
 
     private _getDateTimeString(timestamp: Dayjs) {
         return prettyMs(timestamp.diff(this._options.timeZero), {

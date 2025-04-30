@@ -4,6 +4,7 @@ import { getOptions } from "./options.js"
 import cli from "./cli.js"
 import yargs from "yargs"
 import { hideBin } from "yargs/helpers"
+import { Git } from "./git/git.js"
 
 const cliOptions = cli.parseSync()
 if (cliOptions.com)
@@ -20,12 +21,24 @@ yargs(hideBin(process.argv))
     .version()
     .usage("$0 <command> [options]")
     .option("dry-run", {
-        alias: "d",
+        alias: "D",
         type: "boolean",
         description: "Run in dry-run mode, no changes will be made"
     })
-    .command("init", "Initialize autogit in the current directory", yargs => {}, args => {
-        
+    .option("git", {
+        alias: "g",
+        type: "string",
+        description: "Path to the git executable",
+        default: "git"
+    })
+    .option("dir", {
+        alias: "d",
+        type: "string",
+        description: "Path to the directory to watch",
+        default: "."
+    })
+    .command("init", "Initialize autogit in the current directory", yargs => {}, async args => {
+        const g = await Git.create(args.git, args.dir)
     })
     .command("watch", "Watch the current directory for changes", yargs => {
         return yargs.option("config", {
