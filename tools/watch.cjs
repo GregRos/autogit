@@ -1,5 +1,5 @@
 const { buildCommandLine } = require("./build-options.cjs");
 const { exec } = require("shelljs")
-exec(`esbuild ${buildCommandLine.join(" ")}`, {
+exec(`esbuild --watch ${buildCommandLine.join(" ")}`, {
     shell: true
 })

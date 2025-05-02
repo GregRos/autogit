@@ -16,7 +16,13 @@ function _getIntervalString(index: number, interval: LabeledTime) {
 }
 export function createTimer(options: TimingOptions) {
     const { interval, immediately } = options
-    logger.debug("Starting AutoGit interval timer with interval=%d, firstDelay=%d")
+    logger.debug(
+        {
+            interval: interval.text,
+            immediately
+        },
+        "Starting AutoGit interval timer with..."
+    )
     return timer(immediately ? new LabeledTime("5s").ms : interval.ms, interval.ms).pipe(
         map(n => {
             return _getIntervalString(n, interval)

@@ -2,9 +2,10 @@
 process.env.ROARR_LOG = "true"
 import { dump } from "js-yaml"
 import { writeFile } from "node:fs/promises"
+import { yamprint } from "yamprint"
 import yargs from "yargs"
 import { hideBin } from "yargs/helpers"
-import { Git } from "./git/git.js"
+import { Git } from "./git.js"
 import { Roarr } from "./logging/setup.js"
 import { defaultOptions, loadConfig } from "./options.js"
 import { createTimer } from "./timing.js"
@@ -13,7 +14,7 @@ import { LabeledTime } from "./utils/labeled-time.js"
 Roarr.debug("Sound check 1-2-1-2")
 yargs(hideBin(process.argv))
     .scriptName("autogit")
-    .version()
+    .version((globalThis as any).__VERSION__)
     .usage("$0 <command> [options]")
     .option("dry-run", {
         alias: "D",
@@ -33,14 +34,34 @@ yargs(hideBin(process.argv))
         default: "."
     })
     .command(
+        "config",
+        "Show the autogit config file",
+        yargs => {},
+        async args => {
+            const config = loadConfig({
+                cwd: args.dir
+            })
+            console.log(yamprint(config))
+        }
+    )
+    .command(
         "init",
         "Initialize autogit in the current directory",
         yargs => {},
         async args => {
+            const configName = "./.autogitrc.yml"
             const git = new Git(args.git, args.dir, args.dryRun)
             await git.init()
-            Roarr.debug("Creating autogit config file...")
-            await writeFile("./autogitrc.yml", dump(defaultOptions), "utf8")
+            Roarr.debug(`Creating autogit config file... ${configName}`)
+            try {
+                loadConfig({
+                    cwd: args.dir
+                })
+            } catch (e) {
+                Roarr.debug("Error locating config file, will create a new one %s", e as any)
+                await writeFile(configName, dump(defaultOptions), "utf8")
+                await git.commitAll("AUTOGIT CONFIG")
+            }
         }
     )
     .command(
@@ -79,7 +100,7 @@ yargs(hideBin(process.argv))
                 interval: config.every,
                 immediately: config.immediately
             }).subscribe(async n => {
-                await git.commit(["Autogit commit"])
+                await git.commitAllTimed("Autogit commit")
             })
         }
     )
