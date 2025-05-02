@@ -64,7 +64,6 @@ export function override(R: typeof ROARR) {
         const logLevel = obj.context.logLevel
         delete obj.context.logLevel
         const levelEmoji = getLevelEmoji(logLevel)
-        const properties = yamprint(obj.context)
 
         const myChalk = levelChalkFormatter(logLevel)
         const firstLine = chalk.bold(myChalk(`${dt} ${levelEmoji} ${obj.message}`))

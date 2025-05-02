@@ -1,6 +1,5 @@
 import { cosmiconfigSync } from "cosmiconfig"
 import { defaults } from "lodash-es"
-import { yamprint } from "yamprint"
 import { z } from "zod"
 import { Roarr } from "./logging/setup.js"
 import { LabeledTime } from "./utils/labeled-time.js"
@@ -25,11 +24,20 @@ export const AutogitOptions = z.object({
 export type AutogitOptions = z.infer<typeof AutogitOptions>
 
 export function loadConfig(overrides: Partial<AutogitOptions> = {}): AutogitOptions {
-    Roarr.debug("Attempting to load cosmiconfig")
+    logger.debug("Attempting to load cosmiconfig")
     const optionsFile = cosmiconfigSync("autogit").search()
-    console.log(yamprint(optionsFile))
+    if (!optionsFile) {
+        logger.debug("No config file found")
+    } else {
+        logger.debug(
+            {
+                filepath: optionsFile.filepath,
+                config: optionsFile.config
+            },
+            "Config file found"
+        )
+    }
     const cfg = defaults(overrides, optionsFile?.config ?? {})
-    console.log(yamprint(cfg))
     return AutogitOptions.parse(cfg, {
         path: ["AutogitOptions", optionsFile?.filepath ?? ""]
     })

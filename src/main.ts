@@ -2,6 +2,7 @@
 process.env.ROARR_LOG = "true"
 import { dump } from "js-yaml"
 import { writeFile } from "node:fs/promises"
+import { mergeMap } from "rxjs"
 import { yamprint } from "yamprint"
 import yargs from "yargs"
 import { hideBin } from "yargs/helpers"
@@ -12,7 +13,7 @@ import { createTimer } from "./timing.js"
 import { LabeledTime } from "./utils/labeled-time.js"
 
 Roarr.debug("Sound check 1-2-1-2")
-yargs(hideBin(process.argv))
+void yargs(hideBin(process.argv))
     .scriptName("autogit")
     .version((globalThis as any).__VERSION__)
     .usage("$0 <command> [options]")
@@ -99,9 +100,13 @@ yargs(hideBin(process.argv))
             createTimer({
                 interval: config.every,
                 immediately: config.immediately
-            }).subscribe(async n => {
-                await git.commitAllTimed("Autogit commit")
             })
+                .pipe(
+                    mergeMap(async n => {
+                        await git.commitAllTimed("Autogit commit")
+                    })
+                )
+                .subscribe()
         }
     )
     .demandCommand(1, "Please specify a command.")

@@ -20,7 +20,7 @@ export class LinesDiff {
     }
 
     static fromDiffResult(summary: DiffResult) {
-        const files = seq(summary.files).filter(x => x.binary === false)
+        const files = seq(summary.files).filter(x => !x.binary)
         const insertions = files.sumBy(x => x.insertions).pull()
         const deletions = files.sumBy(x => x.deletions).pull()
         return new LinesDiff(insertions, deletions)

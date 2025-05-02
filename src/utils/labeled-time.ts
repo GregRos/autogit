@@ -1,5 +1,4 @@
 import { parseDuration } from "./parse-duration.js"
-;``
 export class LabeledTime {
     readonly ms: number
     constructor(private readonly _input: string | number) {

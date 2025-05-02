@@ -17,10 +17,7 @@ export class FilesDiff {
 
     static fromStatusResult(status: StatusResult) {
         const files = seq(status.files)
-        const modified = files
-            .filter(x => x.index === "M")
-            .count()
-            .pull()
+
         const added = files
             .filter(x => x.index === "A")
             .count()
