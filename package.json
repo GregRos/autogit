@@ -1,6 +1,6 @@
 {
   "name": "@gregros/autogit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Commits automatically to save progress.",
   "homepage": "https://github.com/GregRos/autogit#readme",
   "repository": "github:GregRos/autogit",
@@ -24,7 +24,7 @@
   "types": "./dist/esm/main.d.ts",
   "bin": "./publish/autogit.js",
   "files": [
-    "dist",
+    "publish",
     "src",
     "README.md",
     "LICENSE.md",
