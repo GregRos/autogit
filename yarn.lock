@@ -289,7 +289,7 @@ __metadata:
     ts-node: "npm:^10.9.2"
     tsx: "npm:^4.19.3"
     typescript: "npm:^5.8.3"
-    what-are-you: "npm:^0.1.8"
+    what-are-you: "npm:^0.1.11"
     yamprint: "npm:^0.8.4"
     yargs: "npm:^17.7.2"
     zod: "npm:^3.24.3"
@@ -5154,11 +5154,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"what-are-you@portal:/C:/codegr/what-are-you::locator=%40gregros%2Fautogit%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "what-are-you@portal:/C:/codegr/what-are-you::locator=%40gregros%2Fautogit%40workspace%3A."
+"what-are-you@npm:^0.1.11":
+  version: 0.1.11
+  resolution: "what-are-you@npm:0.1.11"
+  checksum: 10c0/b7e17a9f500ba8d9acef835aeb27b27fb00d539c8688b91e03f0899faec501b086eb18550932cb582d3952fcf773682b09c80ea3db507cfbaee01588e30ca335
   languageName: node
-  linkType: soft
+  linkType: hard
 
 "what-the-test@npm:^1.2.0":
   version: 1.2.0

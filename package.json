@@ -51,9 +51,6 @@
     "*.{ts,mts,cts,js,mjs,cjs}": "node_modules/.bin/eslint --cache --fix",
     "'src/**/*.{js,jsx,cjs,mjs,ts,tsx,cts,mts,ctsx,mtsx,html,htm,yaml,yml,json,scss,css}'": "node_modules/.bin/prettier --write"
   },
-  "resolutions": {
-    "what-are-you": "portal:/C:/codegr/what-are-you"
-  },
   "dependencies": {
     "@types/lodash": "^4.17.16",
     "@types/lodash-es": "^4.17.12",
@@ -69,7 +66,7 @@
     "roarr": "^7.21.1",
     "rxjs": "^7.8.2",
     "simple-git": "^3.27.0",
-    "what-are-you": "^0.1.8",
+    "what-are-you": "^0.1.11",
     "yargs": "^17.7.2",
     "zod": "^3.24.3",
     "zod-validation-error": "^3.4.0"
