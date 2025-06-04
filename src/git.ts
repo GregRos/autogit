@@ -2,9 +2,9 @@ import dayjs from "dayjs"
 import { doddle } from "doddle"
 import prettyMs from "pretty-ms"
 import { SimpleGit, simpleGit } from "simple-git"
-import { FilesDiff } from "./historian/diff/files-diff.js"
-import { LinesDiff } from "./historian/diff/lines-diff.js"
-import { DiffSummary } from "./historian/diff/summary.js"
+import { FilesDiff } from "./diff/files-diff.js"
+import { LinesDiff } from "./diff/lines-diff.js"
+import { DiffSummary } from "./diff/summary.js"
 import { Roarr } from "./logging/setup.js"
 const logger = Roarr.child({
     part: "git"
@@ -100,11 +100,12 @@ export class Git {
     }
     #firstCommit = doddle(async () => {
         return this._git.log({
-            "--reverse": null,
-            "--max-count": 1
+            "--reverse": null
         })
     })
-        .map(x => x?.all[0])
+        .map(x => {
+            return x?.all[0]
+        })
         .catch(e => {
             if (e.message.includes("does not have any commits")) {
                 return undefined
@@ -114,6 +115,13 @@ export class Git {
 
     #initialDate = doddle(async () => {
         const initialCommit = await this.#firstCommit.pull()
+        logger.info(
+            {
+                hash: initialCommit?.hash,
+                date: initialCommit?.date
+            },
+            "Initial commit found"
+        )
         if (!initialCommit) {
             return undefined
         }

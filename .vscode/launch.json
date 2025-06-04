@@ -7,8 +7,8 @@
       "name": "Launch Main (dist)",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "program": "${workspaceFolder}/dist/esm/main.js",
-      "cwd": "${workspaceFolder}/../a",
+      "program": "${workspaceFolder}/publish/autogit.js",
+      "cwd": "${workspaceFolder}/../__career",
       "args": ["watch"],
       "env": {
         "NODE_ENV": "development",

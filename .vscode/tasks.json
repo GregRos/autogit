@@ -8,6 +8,15 @@
       "problemMatcher": ["$tsc-watch"],
       "group": "build",
       "label": "tsc: watch - tsconfig.json"
+    },
+    {
+      "type": "shell",
+      "label": "yarn bundle:watch",
+      "command": "yarn",
+      "args": ["run", "bundle:watch"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
     }
   ]
 }

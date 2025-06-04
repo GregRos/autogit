@@ -12,7 +12,7 @@ export class LinesDiff {
         if (this.isEmpty) {
             return "📝 ±0L"
         }
-        return [`📝 ±${added + removed}L`, `+${added}L   -${removed}L`].join(" : ")
+        return [`+${added}L -${removed}L`].join(" : ")
     }
 
     get isEmpty() {
