@@ -16,6 +16,9 @@
       "args": ["run", "bundle:watch"],
       "options": {
         "cwd": "${workspaceFolder}"
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
       }
     }
   ]

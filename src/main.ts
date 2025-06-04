@@ -28,27 +28,27 @@ void yargs(hideBin(process.argv))
         description: "Path to the git executable",
         default: "git"
     })
-    .option("dir", {
-        alias: "d",
-        type: "string",
-        description: "Path to the directory to watch",
-        default: "."
-    })
     .command(
         "config",
         "Show the autogit config file",
         yargs => {},
         async args => {
-            const config = loadConfig({
-                cwd: args.dir
-            })
+            const config = loadConfig({})
             console.log(yamprint(config))
         }
     )
     .command(
         "init",
         "Initialize autogit in the current directory",
-        yargs => {},
+        yargs => {
+            return yargs.option("dir", {
+                alias: "d",
+                type: "string",
+                description: "Path to the directory to initialize autogit in",
+                default: ".",
+                requiresArg: true
+            })
+        },
         async args => {
             const configName = "./.autogitrc.yml"
             const git = new Git(args.git, args.dir, args.dryRun)
@@ -70,6 +70,12 @@ void yargs(hideBin(process.argv))
         "Watch the current directory for changes",
         yargs => {
             return yargs
+                .option("dir", {
+                    alias: "d",
+                    type: "string",
+                    description: "Path to the directory to watch",
+                    requiresArg: false
+                })
                 .option("config", {
                     alias: "c",
                     type: "string",

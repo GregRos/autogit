@@ -1,6 +1,6 @@
 {
   "name": "@gregros/autogit",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Commits automatically to save progress.",
   "homepage": "https://github.com/GregRos/autogit#readme",
   "repository": "github:GregRos/autogit",

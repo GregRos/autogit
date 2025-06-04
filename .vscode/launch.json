@@ -8,7 +8,7 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "program": "${workspaceFolder}/publish/autogit.js",
-      "cwd": "${workspaceFolder}/../__career",
+      "cwd": "${workspaceFolder}/../__blog",
       "args": ["watch"],
       "env": {
         "NODE_ENV": "development",
