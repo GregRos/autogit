@@ -7,7 +7,8 @@ export class FilesDiff {
     constructor(
         readonly addedFiles: FileStatusResult[],
         readonly removedFiles: FileStatusResult[],
-        readonly modifiedFiles: FileStatusResult[]
+        readonly modifiedFiles: FileStatusResult[],
+        readonly renamedFiles: FileStatusResult[] = []
     ) {}
 
     get added() {
@@ -16,6 +17,10 @@ export class FilesDiff {
 
     get removed() {
         return this.removedFiles.length
+    }
+
+    get renamed() {
+        return this.renamedFiles.length
     }
 
     get modified() {
@@ -34,20 +39,23 @@ export class FilesDiff {
         }
         const oneAddedFile = getShortFileName(this.addedFiles[0], "+")
         const oneRemovedFile = getShortFileName(this.removedFiles[0], "-")
-        const oneModifiedFile = getShortFileName(this.modifiedFiles[0], "~")
-        const all = [oneAddedFile, oneRemovedFile, oneModifiedFile].filter(Boolean).join(" ")
+        const oneModifiedFile = getShortFileName(this.modifiedFiles[0], "Δ")
+        const oneRenamedFile = getShortFileName(this.renamedFiles[0], "→")
+        const all = [oneAddedFile, oneRemovedFile, oneModifiedFile, oneRenamedFile]
+            .filter(Boolean)
+            .join(" ")
         return all
     }
 
     toString() {
-        const { added, removed, modified } = this
+        const { added, removed, modified, renamed } = this
         if (this.isEmpty) {
             return "🗃️ ±0F"
         }
         const summary = this.shortNamesSummary
-        const items = [`🗃️ +${added}F -${removed}F Δ${modified}F`, summary]
+        const items = [`🗃️ +${added}F -${removed}F Δ${modified}F →${renamed}F`, summary]
             .filter(x => x)
-            .join(" ┃ ")
+            .join(" ❚ ")
         return items
     }
 
@@ -67,10 +75,15 @@ export class FilesDiff {
             .filter(x => x.index === "M")
             .toArray()
             .pull()
-        return new FilesDiff(addedFiles, removedFiles, modifiedFiles)
+
+        const renamedFiles = files
+            .filter(x => x.index === "R")
+            .toArray()
+            .pull()
+        return new FilesDiff(addedFiles, removedFiles, modifiedFiles, renamedFiles)
     }
 
     get isEmpty() {
-        return this.added === 0 && this.removed === 0
+        return this.added === 0 && this.removed === 0 && this.modified === 0 && this.renamed === 0
     }
 }
