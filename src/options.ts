@@ -17,6 +17,7 @@ export type Duration = z.infer<typeof Duration>
 
 export const AutogitOptions = z.object({
     cwd: z.string().optional().default("."),
+    globs: z.string().array().default(["."]).or(z.string()),
     every: Duration,
     immediately: z.boolean().optional().default(true)
 })
@@ -50,6 +51,7 @@ export function tryLoadConfig(overrides: Partial<AutogitOptions> = {}): AutogitO
 export const defaultOptions: z.input<typeof AutogitOptions> = {
     cwd: ".",
     every: "5m",
+    globs: ["."],
     immediately: true
 }
 

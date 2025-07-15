@@ -9,6 +9,11 @@ import { Roarr } from "./logging/setup.js"
 const logger = Roarr.child({
     part: "git"
 })
+
+export interface CommitInfo {
+    globs: string[] | string
+    descriptive: string[]
+}
 export class Git {
     private _git: SimpleGit
     constructor(
@@ -18,7 +23,10 @@ export class Git {
     ) {
         this._git = simpleGit({
             baseDir: cwd,
-            binary: executable
+            binary: executable,
+            unsafe: {
+                allowUnsafeCustomBinary: true
+            }
         })
     }
 
@@ -47,28 +55,47 @@ export class Git {
         }
         if (state !== "okay") {
             logger.debug("No commits found, creating initial commit...")
-            !this.dryRun && (await this.commitAll("Initial commit"))
+            !this.dryRun && (await this._initialCommit())
+            logger.debug("Initial commit created")
         }
     }
 
-    async _stageAll() {
-        Roarr.debug("STAGING all changes...")
-        !this.dryRun && (await this._git.add("."))
+    async _initialCommit() {
+        await this._git.commit("Initial commit", {
+            "--allow-empty": null
+        })
+    }
+
+    async _stageAll(globs: string[] | string) {
+        Roarr.debug(
+            {
+                globs: globs
+            },
+            "STAGING changes..."
+        )
+        try {
+            !this.dryRun && (await this._git.add(globs))
+        } catch (e: any) {
+            if (e.message.includes("did not match any files")) {
+                return true
+            }
+            throw e
+        }
         return true
     }
 
-    async commitAll(...descriptive: string[]) {
-        const staged = await this._stageAll()
+    async commitAll(info: CommitInfo) {
+        const staged = await this._stageAll(info.globs)
         if (!staged) {
             return
         }
-        const message = [...descriptive].join(" ┃ ")
+        const message = [...info.descriptive].join(" ┃ ")
         Roarr.info(`COMMITTING « ${message} »`)
 
         !this.dryRun && (await this._git.commit(message))
     }
 
-    async commitAllTimed(...descriptive: string[]) {
+    async commitAllTimed(info: CommitInfo) {
         const state = await this._state.pull()
         if (state === "not-repo") {
             Roarr.error("Not a git repository. Run `autogit init` first.")
@@ -79,7 +106,7 @@ export class Git {
             return false
         }
 
-        const staged = await this._stageAll()
+        const staged = await this._stageAll(info.globs)
         if (!staged) {
             return
         }
@@ -92,7 +119,7 @@ export class Git {
             Roarr.warn("NO CHANGES to commit")
             return
         }
-        const message = [...descriptive, dtString, ...totalDiff.toParts()].join(" ┃ ")
+        const message = [...info.descriptive, dtString, ...totalDiff.toParts()].join(" ┃ ")
         Roarr.info(`COMMITTING « ${message} »`)
 
         !this.dryRun && (await this._git.commit(message))

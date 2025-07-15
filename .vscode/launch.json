@@ -7,9 +7,10 @@
       "name": "Launch Main (dist)",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "program": "${workspaceFolder}/publish/autogit.js",
-      "cwd": "${workspaceFolder}/../__blog",
+      "program": "${workspaceFolder}/dist/esm/main.js",
+      "cwd": "${workspaceFolder}/../a",
       "args": ["watch"],
+      "resolveSourceMapLocations": ["${workspaceFolder}/**", "!**/node_modules/**"],
       "env": {
         "NODE_ENV": "development",
         "NODE_OPTIONS": "--enable-source-maps --stack-trace-limit=1000"

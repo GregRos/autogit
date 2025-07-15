@@ -1,6 +1,6 @@
 {
   "name": "@gregros/autogit",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Commits automatically to save progress.",
   "homepage": "https://github.com/GregRos/autogit#readme",
   "repository": "github:GregRos/autogit",
@@ -52,7 +52,6 @@
     "'src/**/*.{js,jsx,cjs,mjs,ts,tsx,cts,mts,ctsx,mtsx,html,htm,yaml,yml,json,scss,css}'": "node_modules/.bin/prettier --write"
   },
   "dependencies": {
-    "@types/yargs": "^17.0.33",
     "cosmiconfig": "^9.0.0",
     "dayjs": "^1.11.13",
     "doddle": "^5.0.13",
@@ -74,6 +73,7 @@
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^22.15.2",
     "@types/shelljs": "^0",
+    "@types/yargs": "^17.0.33",
     "@typescript-eslint/eslint-plugin": "^8.31.0",
     "@typescript-eslint/parser": "^8.31.0",
     "esbuild": "^0.25.3",
